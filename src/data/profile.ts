@@ -14,7 +14,7 @@ export const personalInfo = {
   headline: 'GenAI Developer / Machine Learning Engineer',
   tagline: 'Bridging AI systems with real-world business operations.',
   summary:
-    'Results-driven Generative AI Developer, Machine Learning Engineer, and AI Automation professional with 2+ years of experience, combined with 6+ years in Printing Production Operations and Data Analysis. Specialized in LLM integration, prompt engineering, and AI workflow automation, with a strong ability to bridge business operations and advanced AI systems to improve efficiency and decision-making.',
+    'Results-driven Generative AI Developer, Machine Learning Engineer, and AI Automation professional with 2+ years of experience, combined with 4+ years in Printing Production Operations and Data Analysis. Specialized in LLM integration, prompt engineering, and AI workflow automation, with a strong ability to bridge business operations and advanced AI systems to improve efficiency and decision-making.',
   location: 'Kolkata, West Bengal, India',
   phone: '(+91) 7003660883',
   phoneRaw: '+917003660883',
@@ -23,7 +23,7 @@ export const personalInfo = {
   linkedinDisplay: 'linkedin.com/in/amit-halder-',
   resumeUrl: '/Amit_Halder_Resume.pdf',
   experienceYearsAI: '2+',
-  experienceYearsOps: '6+',
+  experienceYearsOps: '4+',
 };
 
 export const careerPillars: CareerPillar[] = [
@@ -68,7 +68,7 @@ export const careerPillars: CareerPillar[] = [
     title: 'Enterprise Operations & ERP',
     subtitle: 'Industrial Planning & WIP Management',
     description:
-      'Over 6 years directing Material Requirements Planning (MRP), Work-in-Progress (WIP) tracking, and ERP data fidelity in industrial print production facilities.',
+      'Over 4 years directing Material Requirements Planning (MRP), Work-in-Progress (WIP) tracking, and ERP data fidelity in industrial print production facilities.',
     icon: 'Factory',
     tags: ['ERP Systems', 'MRP', 'Production Planning', 'WIP Tracking', 'Quality Control'],
   },
@@ -289,24 +289,24 @@ export const skillCategories: SkillCategory[] = [
 ];
 
 export const techOrbit = [
-  { name: 'LLMs', category: 'AI', level: 'Core' },
   { name: 'Prompt Engineering', category: 'AI', level: 'Core' },
   { name: 'Python', category: 'Code', level: 'Core' },
+  { name: 'LLMs', category: 'AI', level: 'Core' },
   { name: 'Machine Learning', category: 'AI', level: 'Core' },
   { name: 'NLP', category: 'AI', level: 'Core' },
   { name: 'Fine-tuning', category: 'AI', level: 'Advanced' },
   { name: 'Hugging Face', category: 'AI', level: 'Core' },
-  { name: 'LangChain', category: 'AI', level: 'Core' },
   { name: 'API Integration', category: 'Eng', level: 'Core' },
+  { name: 'LangChain', category: 'AI', level: 'Core' },
   { name: 'n8n Automation', category: 'Automation', level: 'Core' },
-  { name: 'GANs', category: 'AI', level: 'Specialized' },
+  { name: 'DaVinci Resolve', category: 'Media', level: 'Applied' },
   { name: 'Synthetic Data', category: 'AI', level: 'Specialized' },
   { name: 'SQL', category: 'Data', level: 'Core' },
   { name: 'Power BI', category: 'Data', level: 'Core' },
   { name: 'Excel Modeling', category: 'Data', level: 'Core' },
   { name: 'ERP Systems', category: 'Operations', level: 'Core' },
-  { name: 'MRP', category: 'Operations', level: 'Core' },
-  { name: 'DaVinci Resolve', category: 'Media', level: 'Applied' },
+  { name: 'AI Automation', category: 'Automation', level: 'Core' },
+  { name: 'GANs', category: 'AI', level: 'Specialized' },
 ];
 
 export const certifications: CertificationItem[] = [
@@ -570,7 +570,7 @@ export const projects: Project[] = [
 
 export const profileStats = {
   genaiYears: 2,
-  opsYears: 6,
+  opsYears: 4,
   certs: 16,
   roles: 6
 };

@@ -1,4 +1,4 @@
-﻿# Copies the .git folder from temp repo to the current workspace
+# Copies the .git folder from temp repo to the current workspace
 $ErrorActionPreference = "SilentlyContinue"
 $ws = Split-Path -Parent $PSScriptRoot
 $tempGit = "C:\Users\askfo\AppData\Local\Temp\portfolio_repo\.git"
@@ -21,3 +21,4 @@ if (Test-Path $tempGit) {
 
 Set-Location $ws
 git status -sb
+

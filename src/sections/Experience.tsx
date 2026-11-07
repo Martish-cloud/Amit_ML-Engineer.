@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import SpotlightCard from '../bits/SpotlightCard';
 import { experiences } from '../data/profile';
-import { portfolioImages } from '../data/assets/portfolioImages';
+import boyPortrait from '../Images/Image 1.png';
 
 const sideQuests = [
   { name: 'LLM Prompt Engineering Suite', lang: 'Python', role: 'Prompt Architecture', stars: 'Core' },
@@ -47,8 +47,6 @@ export default function Experience() {
     { scope: root, dependencies: [filter] }
   );
 
-  const portraitSrc = (portfolioImages && portfolioImages['laptop-white.webp']) || '/img/laptop-white.webp';
-
   return (
     <section ref={root} className="exp section" id="experience">
       <div className="section__head">
@@ -63,7 +61,7 @@ export default function Experience() {
           </h2>
           <p className="about__note max-w-xl mb-0">
             Chronological record of roles spanning Generative AI development at Intuit and Mphasis,
-            along with 6+ years of rigorous industrial PPC, MRP, and ERP leadership.
+            along with 4+ years of rigorous industrial PPC, MRP, and ERP leadership.
           </p>
         </div>
 
@@ -92,7 +90,12 @@ export default function Experience() {
 
       <div className="exp__grid">
         <figure className="exp__portrait">
-          <img src={portraitSrc} alt="Mr. Amit Haldar workstation illustration" loading="lazy" />
+          <img
+            src={boyPortrait}
+            alt="Mr. Amit Haldar"
+            className="w-full h-full object-cover object-center"
+            loading="lazy"
+          />
         </figure>
 
         <div>
@@ -112,7 +115,7 @@ export default function Experience() {
                   <h3>{e.role}</h3>
                   <span className="timeline__org">{e.company}</span>
                   <p>{e.impactSummary}</p>
-                  <ul className="chips mt-4">
+                  <ul className="chips mt-3">
                     {e.skills.map((s) => (
                       <li key={s}>{s}</li>
                     ))}

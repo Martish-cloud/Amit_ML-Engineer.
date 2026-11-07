@@ -135,7 +135,7 @@ export default function About() {
             </div>
           </dl>
 
-          <div className="flex items-center gap-4 mt-6 flex-wrap">
+          <div className="flex items-center gap-4 mt-4 flex-wrap">
             <a
               href={personalInfo.resumeUrl}
               download="Amit_Halder_Resume.pdf"

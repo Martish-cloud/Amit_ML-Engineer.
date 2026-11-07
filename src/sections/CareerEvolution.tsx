@@ -20,12 +20,11 @@ export function CareerEvolution() {
   useGSAP(
     () => {
       gsap.from('.traj__card', {
-        y: 40,
-        opacity: 0.35,
-        stagger: 0.1,
-        duration: 0.8,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: root.current, start: 'top 85%' }
+        y: 24,
+        stagger: 0.08,
+        duration: 0.6,
+        ease: 'power2.out',
+        scrollTrigger: { trigger: root.current, start: 'top 90%' }
       });
     },
     { scope: root }
@@ -43,7 +42,7 @@ export function CareerEvolution() {
           Foundation <em className="serif">Meets Frontier AI</em>
         </h2>
         <p className="about__note max-w-3xl mb-0">
-          How 6+ years of shopfloor discipline, ERP data accuracy, and material requirements planning
+          How 4+ years of shopfloor discipline, ERP data accuracy, and material requirements planning
           evolved into engineering resilient enterprise Generative AI and Machine Learning systems.
         </p>
       </div>

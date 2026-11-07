@@ -106,8 +106,8 @@ export default function Intro({ onReady }: { onReady: () => void }) {
         </div>
       </div>
 
-      <h1 className="intro__name" aria-label="Mr. Amit Haldar">
-        <span>Mr. Amit</span>
+      <h1 className="intro__name" aria-label="Amit Haldar">
+        <span>Amit</span>
         <span>Haldar</span>
       </h1>
 

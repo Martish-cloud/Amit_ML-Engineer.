@@ -99,7 +99,7 @@ export default function Skills() {
         <ScrollVelocity
           texts={[
             'LLMs ✦ Prompt Engineering ✦ Python ✦ Model Fine-Tuning ✦ NLP ✦ ',
-            'n8n Automation ✦ REST APIs ✦ SQL ✦ Power BI ✦ ERP Systems ✦ MRP ✦ '
+            'n8n Automation ✦ REST APIs ✦ SQL ✦ Power BI ✦ ERP Systems ✦ AI Automation ✦ '
           ]}
           velocity={60}
           className="marquee-text"
