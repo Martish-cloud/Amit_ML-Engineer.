@@ -4,6 +4,14 @@ import { useGSAP } from '@gsap/react';
 import TiltedCard from '../bits/TiltedCard';
 import { projects } from '../data/profile';
 import { projectShots } from '../data/assets/projectShots';
+import killo1 from '../Images/Kiloo/1.png';
+import killo2 from '../Images/Kiloo/2.png';
+import killo3 from '../Images/Kiloo/3.png';
+import killo4 from '../Images/Kiloo/4.png';
+import killo5 from '../Images/Kiloo/5.png';
+import killo6 from '../Images/Kiloo/6.png';
+
+const killoImages: string[] = [killo1, killo2, killo3, killo4, killo5, killo6];
 
 export default function Projects() {
   const root = useRef<HTMLElement>(null);
@@ -69,7 +77,7 @@ export default function Projects() {
         </div>
 
         {projects.map((p, i) => {
-          const shotSrc = (projectShots && projectShots[p.shotKey]) || `/shots/${p.shotKey}`;
+          const shotSrc = killoImages[i] || (projectShots && projectShots[p.shotKey]) || `/shots/${p.shotKey}`;
           return (
             <article key={p.repo} className="panel" style={{ '--accent': p.accent } as CSSProperties}>
               <span className="panel__kanji" aria-hidden="true">{p.kanji}</span>
