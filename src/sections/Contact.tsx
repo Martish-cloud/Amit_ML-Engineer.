@@ -7,6 +7,7 @@ import Magnet from '../bits/Magnet';
 import GradientText from '../bits/GradientText';
 import { personalInfo, socials } from '../data/profile';
 import { portfolioImages } from '../data/assets/portfolioImages';
+import ghostAndPrice from '../Images/Image 2.png';
 
 export default function Contact() {
   const root = useRef<HTMLElement>(null);
@@ -27,7 +28,6 @@ export default function Contact() {
     { scope: root }
   );
 
-  const companionSrc = (portfolioImages && portfolioImages['companion.webp']) || '/img/companion.webp';
   const runnerSrc = (portfolioImages && portfolioImages['naruto-sticker.gif']) || '/img/naruto-sticker.gif';
 
   return (
@@ -106,7 +106,12 @@ export default function Contact() {
           </ul>
         </div>
 
-        <img className="contact__art" src={companionSrc} alt="Mr. Amit Haldar 3D companion illustration" loading="lazy" />
+        <img
+          className="contact__art"
+          src={ghostAndPrice}
+          alt="Ghost and Captain Price - Call of Duty"
+          loading="lazy"
+        />
       </div>
 
       <footer className="footer">
