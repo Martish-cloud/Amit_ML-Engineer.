@@ -1,133 +1,113 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Sparkles,
-  Binary,
-  Cpu,
-  Database,
-  Layers,
-  Palette,
-  CheckCircle,
-} from 'lucide-react';
-import { skillCategories } from '../data/profile';
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
+import ScrollVelocity from '../bits/ScrollVelocity';
+import { drawCover, framePaths, loadFrames, nearestLoaded } from '../lib/frames';
+import { skillFrames } from '../data/assets/skillFrames';
 
-const categoryIconMap: Record<string, React.ReactNode> = {
-  Sparkles: <Sparkles className="w-4 h-4 text-rose-400" />,
-  Binary: <Binary className="w-4 h-4 text-sky-400" />,
-  Cpu: <Cpu className="w-4 h-4 text-purple-400" />,
-  Database: <Database className="w-4 h-4 text-emerald-400" />,
-  Layers: <Layers className="w-4 h-4 text-amber-400" />,
-  Palette: <Palette className="w-4 h-4 text-pink-400" />,
-};
+const FRAMES = skillFrames && skillFrames.length > 0 ? skillFrames : framePaths('/seq/skills', 61);
 
-export const Skills: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+const amitSkills = [
+  'Large Language Models (LLMs)',
+  'Prompt Engineering (Few-Shot / Zero-Shot)',
+  'Model Fine-Tuning & Evaluation',
+  'Natural Language Processing (NLP)',
+  'Python for Data Science & ML',
+  'AI Workflow Automation & n8n',
+  'REST API Integration & Orchestration',
+  'SQL Querying & Data Extraction',
+  'Power BI Executive Dashboards',
+  'ERP Systems Implementation',
+  'Material Requirements Planning (MRP)',
+  'Work-in-Progress (WIP) Tracking'
+];
 
-  const displayedCategories =
-    selectedCategory === 'all'
-      ? skillCategories
-      : skillCategories.filter((c) => c.id === selectedCategory);
+export default function Skills() {
+  const root = useRef<HTMLElement>(null);
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const images = useRef<HTMLImageElement[]>([]);
+  const frame = useRef({ i: 0 });
 
-  const filterBtnClass = (active: boolean) =>
-    `px-3 py-1.5 rounded-xl transition-all font-medium flex items-center gap-1.5 ${
-      active
-        ? 'bg-brand-burgundy text-white shadow-sm font-semibold border border-rose-500/40'
-        : 'text-slate-300 hover:text-white hover:bg-white/5'
-    }`;
+  useEffect(() => {
+    images.current = loadFrames(FRAMES);
+    const first = images.current[0];
+    if (first) {
+      if (first.complete) {
+        if (canvas.current) drawCover(canvas.current, first);
+      } else {
+        first.addEventListener('load', () => canvas.current && drawCover(canvas.current, first));
+      }
+    }
+  }, []);
+
+  useGSAP(
+    () => {
+      const draw = () =>
+        canvas.current && drawCover(canvas.current, nearestLoaded(images.current, Math.round(frame.current.i)));
+      const items = gsap.utils.toArray<HTMLElement>('.skills__list li');
+
+      const tl = gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: {
+          trigger: '.skills__pin',
+          start: 'top top',
+          end: '+=220%',
+          scrub: 0.5,
+          pin: true,
+          onUpdate: self => {
+            const lit = Math.floor(self.progress * (items.length + 0.5));
+            items.forEach((li, k) => li.classList.toggle('is-lit', k < lit));
+          }
+        }
+      });
+      tl.to(frame.current, { i: FRAMES.length - 1, duration: 1, onUpdate: draw }, 0)
+        .fromTo('.skills__frame', { scale: 0.82, rotate: -2 }, { scale: 1, rotate: 0, duration: 0.5 }, 0)
+        .fromTo('.skills__frame-glow', { opacity: 0 }, { opacity: 1, duration: 1 }, 0);
+    },
+    { scope: root }
+  );
 
   return (
-    <section id="skills" className="relative py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      {/* Section Header */}
-      <div className="flex items-center gap-2 mb-3">
-        <span className="font-mono text-xs text-rose-400 uppercase tracking-widest font-semibold">
-          04 // Skills &amp; Capabilities
-        </span>
-        <div className="h-[1px] flex-1 max-w-[80px] bg-rose-500/30" />
-      </div>
-
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
-        <div>
-          <h2 className="font-display font-bold text-3xl sm:text-4xl text-white tracking-tight">
-            Technical Ecosystem
-          </h2>
-          <p className="mt-2 text-sm text-slate-300 max-w-xl font-sans">
-            Specialized toolsets across Generative AI foundation models, machine learning,
-            operational automation, and enterprise business intelligence.
-          </p>
+    <section ref={root} className="skills" id="skills">
+      <div className="skills__pin">
+        <div className="section__head">
+          <span className="tag">04 — Jutsu Arsenal</span>
+          <span className="tag tag--dim">技術術</span>
         </div>
-
-        {/* Category Filter Pills */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1.5 rounded-2xl glass-panel border border-white/15 bg-slate-900/60 text-xs">
-          <button onClick={() => setSelectedCategory('all')} className={filterBtnClass(selectedCategory === 'all')}>
-            All Disciplines
-          </button>
-          {skillCategories.map((cat) => (
-            <button key={cat.id} onClick={() => setSelectedCategory(cat.id)} className={filterBtnClass(selectedCategory === cat.id)}>
-              <span>{cat.name}</span>
-            </button>
-          ))}
+        <div className="skills__grid">
+          <div className="skills__frame">
+            <div className="skills__frame-glow" />
+            <canvas ref={canvas} aria-label="3D animated sequence of summoning the technical skill arsenal" />
+          </div>
+          <div className="skills__side">
+            <h2 className="display skills__title">
+              Summoning <em className="serif">the AI stack</em>
+            </h2>
+            <ol className="skills__list">
+              {amitSkills.map((s, i) => (
+                <li key={s}>
+                  <span className="skills__idx">{String(i + 1).padStart(2, '0')}</span>
+                  {s}
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
       </div>
 
-      {/* Categorized Skills Grid */}
-      <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <AnimatePresence mode="popLayout">
-          {displayedCategories.map((category) => (
-            <motion.div
-              key={category.id}
-              layout
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: false, margin: '-40px' }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.35 }}
-              className="glass-card p-6 rounded-2xl flex flex-col justify-between group border border-white/15 bg-slate-900/70 hover:border-white/25 transition-all shadow-sm hover:shadow-lg"
-            >
-              <div>
-                {/* Category Header */}
-                <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-slate-800/80 border border-white/15 flex items-center justify-center">
-                      {categoryIconMap[category.icon]}
-                    </div>
-                    <h3 className="font-display font-bold text-base text-white">
-                      {category.name}
-                    </h3>
-                  </div>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-slate-300">
-                    {category.skills.length} skills
-                  </span>
-                </div>
-
-                <p className="text-xs text-slate-300 mb-5 font-sans leading-relaxed">
-                  {category.description}
-                </p>
-
-                {/* Skills Badges */}
-                <div className="flex flex-wrap gap-2">
-                  {category.skills.map((skill, sIdx) => (
-                    <div
-                      key={sIdx}
-                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${
-                        skill.highlight
-                          ? 'bg-rose-950/40 text-rose-200 border border-rose-500/40 shadow-sm font-semibold'
-                          : 'bg-slate-800/70 text-slate-200 border border-white/10 hover:border-white/20'
-                      }`}
-                    >
-                      <CheckCircle
-                        className={`shrink-0 ${
-                          skill.highlight ? 'w-3.5 h-3.5 text-rose-400' : 'w-3 h-3 text-slate-400'
-                        }`}
-                      />
-                      <span>{skill.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </motion.div>
+      <div className="skills__marquee">
+        <ScrollVelocity
+          texts={[
+            'LLMs ✦ Prompt Engineering ✦ Python ✦ Model Fine-Tuning ✦ NLP ✦ ',
+            'n8n Automation ✦ REST APIs ✦ SQL ✦ Power BI ✦ ERP Systems ✦ MRP ✦ '
+          ]}
+          velocity={60}
+          className="marquee-text"
+          outlineAlternate
+          numCopies={6}
+        />
+      </div>
     </section>
   );
-};
+}
+

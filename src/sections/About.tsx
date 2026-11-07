@@ -1,116 +1,166 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Brain, Cpu, Workflow, BarChart3, Factory, CheckCircle2 } from 'lucide-react';
-import { careerPillars, personalInfo } from '../data/profile';
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
+import { Download, ExternalLink, Bot } from 'lucide-react';
+import BlurText from '../bits/BlurText';
+import CountUp from '../bits/CountUp';
+import CircularText from '../bits/CircularText';
+import SplitText from '../bits/SplitText';
+import { drawCover, framePaths, loadFrames } from '../lib/frames';
+import { personalInfo, profileStats } from '../data/profile';
 
-const iconMap: Record<string, React.ReactNode> = {
-  Brain: <Brain className="w-5 h-5 text-rose-400" />,
-  Cpu: <Cpu className="w-5 h-5 text-sky-400" />,
-  Workflow: <Workflow className="w-5 h-5 text-emerald-400" />,
-  BarChart3: <BarChart3 className="w-5 h-5 text-amber-400" />,
-  Factory: <Factory className="w-5 h-5 text-indigo-400" />,
-};
+const CODE = framePaths('/seq/code', 20);
 
-export const About: React.FC = () => {
+function CodeLoop() {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const imgs = loadFrames(CODE);
+    let i = 0;
+    let dir = 1;
+    let visible = false;
+    const io = new IntersectionObserver(([e]) => (visible = e.isIntersecting));
+    if (ref.current) io.observe(ref.current);
+    const id = window.setInterval(() => {
+      if (!visible || !ref.current) return;
+      drawCover(ref.current, imgs[i]);
+      if (i + dir < 0 || i + dir >= imgs.length) dir *= -1;
+      i += dir;
+    }, 90);
+    return () => {
+      clearInterval(id);
+      io.disconnect();
+    };
+  }, []);
+  return <canvas ref={ref} className="about__canvas" aria-label="Amit Halder coding models and workflows on laptop" />;
+}
+
+export default function About() {
+  const root = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      gsap.fromTo(
+        '.about__media',
+        { clipPath: 'inset(18% 18% 18% 18% round 28px)' },
+        {
+          clipPath: 'inset(0% 0% 0% 0% round(28px))',
+          ease: 'none',
+          scrollTrigger: { trigger: '.about__media', start: 'top 90%', end: 'top 30%', scrub: true }
+        }
+      );
+      gsap.to('.about__canvas', {
+        yPercent: -10,
+        scale: 1.08,
+        ease: 'none',
+        scrollTrigger: { trigger: root.current, start: 'top bottom', end: 'bottom top', scrub: true }
+      });
+      gsap.to('.about__badge', {
+        y: -120,
+        ease: 'none',
+        scrollTrigger: { trigger: root.current, start: 'top bottom', end: 'bottom top', scrub: true }
+      });
+    },
+    { scope: root }
+  );
+
   return (
-    <section id="about" className="relative py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      {/* Section Header Tag */}
-      <div className="flex items-center gap-2 mb-3">
-        <span className="font-mono text-xs text-rose-400 uppercase tracking-widest font-semibold">
-          01 // Professional Profile
-        </span>
-        <div className="h-[1px] flex-1 max-w-[80px] bg-rose-500/40" />
+    <section ref={root} className="about section" id="about">
+      <div className="section__head">
+        <span className="tag">01 — About</span>
+        <span className="tag tag--dim">自己紹介</span>
       </div>
-
-      <h2 className="font-display font-bold text-3xl sm:text-4xl md:text-5xl text-white tracking-tight mb-12 drop-shadow-sm">
-        Where Modern AI Engineering <br className="hidden sm:inline" />
-        Meets Operational Reality.
-      </h2>
-
-      {/* Split Layout: Editorial Left + Pillars Right */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-        {/* Left Column: Editorial Statement */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: false, margin: '-60px' }}
-          transition={{ duration: 0.6 }}
-          className="lg:col-span-5 flex flex-col gap-6"
-        >
-          <div className="glass-card p-6 sm:p-8 rounded-3xl relative overflow-hidden border border-white/12 shadow-xl">
-            <div className="text-xs font-mono uppercase tracking-wider text-rose-400 font-semibold mb-3">
-              Executive Summary
-            </div>
-
-            <p className="text-base sm:text-lg text-white leading-relaxed font-sans font-medium">
-              {personalInfo.summary}
-            </p>
-
-            <div className="mt-8 pt-6 border-t border-white/10 flex flex-col gap-3 text-sm text-slate-200">
-              <div className="flex items-start gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
-                <span>Specialized in LLM integration, prompt engineering, and conversational chatbot systems.</span>
-              </div>
-              <div className="flex items-start gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
-                <span>6+ years orchestrating high-volume industrial printing production, WIP tracking &amp; ERP data.</span>
-              </div>
-              <div className="flex items-start gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
-                <span>End-to-end data analytics translating raw operational metrics into actionable BI dashboards.</span>
-              </div>
-            </div>
+      <div className="about__grid">
+        <div className="about__media-wrap">
+          <div className="about__media">
+            <CodeLoop />
           </div>
-        </motion.div>
-
-        {/* Right Column: 5 Core Competence Cards */}
-        <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {careerPillars.map((pillar, idx) => (
-            <motion.div
-              key={pillar.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, margin: '-60px' }}
-              transition={{ duration: 0.5, delay: idx * 0.08 }}
-              className={`glass-card p-5 rounded-2xl flex flex-col justify-between group border border-white/12 ${
-                idx === 4 ? 'sm:col-span-2' : ''
-              }`}
+          <div className="about__badge">
+            <CircularText
+              text="OPEN TO AI ROLES ✦ COLLABS ✦ GENAI & ML ✦ "
+              size={150}
+              fontSize={12}
+              fontWeight={600}
+              letterSpacing={2}
+              spinDuration={18}
+              color="#f3efe6"
             >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-slate-800/80 border border-white/15 flex items-center justify-center group-hover:scale-105 transition-transform shadow-inner">
-                    {iconMap[pillar.icon]}
-                  </div>
-                  <span className="text-[11px] font-mono text-slate-400 font-medium">0{idx + 1}</span>
-                </div>
+              <span className="about__badge-core">⚡</span>
+            </CircularText>
+          </div>
+        </div>
 
-                <h3 className="font-display font-bold text-base text-white group-hover:text-rose-300 transition-colors">
-                  {pillar.title}
-                </h3>
-                <h4 className="text-xs font-mono text-slate-300 mb-2 font-medium">
-                  {pillar.subtitle}
-                </h4>
+        <div className="about__copy">
+          <SplitText
+            tag="h2"
+            text="I don't just prompt AI. I architect production systems."
+            className="display about__title"
+            splitType="words"
+            effect="rise"
+            mask
+            delay={60}
+            duration={1}
+            textAlign="left"
+          />
+          <BlurText
+            text={personalInfo.summary}
+            className="about__bio"
+            animateBy="words"
+            delay={30}
+            stepDuration={0.25}
+          />
+          <p className="about__note">
+            Specialized in <b>few-shot / zero-shot prompt engineering</b>, fine-tuning, and <b>n8n automated workflows</b>.
+            I bridge the gap between high-stakes business operations (MRP, WIP management, and ERP data fidelity) and frontier
+            Generative AI architectures.
+          </p>
 
-                <p className="text-xs text-slate-300 leading-relaxed font-sans">
-                  {pillar.description}
-                </p>
-              </div>
+          <dl className="stats">
+            <div>
+              <dt>GenAI &amp; ML</dt>
+              <dd>
+                <CountUp to={profileStats.genaiYears} duration={2.2} />+ yrs
+              </dd>
+            </div>
+            <div>
+              <dt>Operations &amp; ERP</dt>
+              <dd>
+                <CountUp to={profileStats.opsYears} duration={2.2} />+ yrs
+              </dd>
+            </div>
+            <div>
+              <dt>Certifications</dt>
+              <dd>
+                <CountUp to={profileStats.certs} duration={1.6} />+
+              </dd>
+            </div>
+          </dl>
 
-              {/* Skill Tags */}
-              <div className="mt-4 pt-3 border-t border-white/10 flex flex-wrap gap-1.5">
-                {pillar.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-2.5 py-0.5 rounded-md text-[10px] font-mono bg-slate-800/80 text-slate-200 border border-white/10 hover:border-white/20 transition-colors"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-          ))}
+          <div className="flex items-center gap-4 mt-8 flex-wrap">
+            <a
+              href={personalInfo.resumeUrl}
+              download="Amit_Halder_Resume.pdf"
+              className="btn btn--orange text-xs py-3 px-6"
+            >
+              <Download className="w-4 h-4" />
+              <span>Download CV</span>
+            </a>
+            <a
+              href={personalInfo.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn--red text-xs py-3 px-6"
+            >
+              <span>Connect on LinkedIn</span>
+              <ExternalLink className="w-4 h-4" />
+            </a>
+            <a href="#inquiry" className="tag py-3 px-5 rounded-full border border-white/20 hover:border-orange-400 transition-colors">
+              <Bot className="w-3.5 h-3.5 text-orange-400" />
+              <span>Start a Project</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>
   );
-};
+}
+

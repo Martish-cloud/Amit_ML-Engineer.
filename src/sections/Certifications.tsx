@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, CheckCircle2, BookOpen, Shield, Eye } from 'lucide-react';
+import { ChevronLeft, ChevronRight, CheckCircle2, Shield, Eye, Award } from 'lucide-react';
 import { certifications } from '../data/profile';
 import type { CertificationItem } from '../types';
 import { ImageLightboxModal } from '../components/ImageLightboxModal';
+import { certificateImages } from '../data/assets/certificateImages';
 
 const categories = [
   'All',
@@ -16,38 +17,25 @@ const categories = [
 
 type Direction = 'next' | 'prev';
 
-const providerBadgeColor = (provider: string) => {
-  switch (provider) {
-    case 'Anthropic':
-      return 'bg-amber-500/15 text-amber-300 border-amber-500/40';
-    case 'Qualcomm':
-      return 'bg-blue-500/15 text-blue-300 border-blue-500/40';
-    case 'UniAthena':
-      return 'bg-purple-500/15 text-purple-300 border-purple-500/40';
-    case 'IBM':
-    case 'IBM SkillsBuild':
-      return 'bg-sky-500/15 text-sky-300 border-sky-500/40';
-    case 'Deloitte':
-      return 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40';
-    case 'Great Learning':
-      return 'bg-cyan-500/15 text-cyan-300 border-cyan-500/40';
-    case 'Udemy':
-      return 'bg-indigo-500/15 text-indigo-300 border-indigo-500/40';
-    case 'Simplilearn':
-      return 'bg-rose-500/15 text-rose-300 border-rose-500/40';
-    case 'LearnTube.AI':
-      return 'bg-teal-500/15 text-teal-300 border-teal-500/40';
-    default:
-      return 'bg-white/10 text-slate-200 border-white/20';
-  }
-};
-
 export const Certifications: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<Direction>('next');
   const [modalCert, setModalCert] = useState<CertificationItem | null>(null);
   const prefersReduced = useReducedMotion();
+
+  // Preload all certificate images into browser memory immediately
+  useEffect(() => {
+    certifications.forEach((c) => {
+      if (c.image) {
+        const fileKey = c.image.replace('/certificates/', '');
+        const src = (certificateImages && certificateImages[fileKey]) || c.image;
+        const img = new Image();
+        img.decoding = 'async';
+        img.src = src;
+      }
+    });
+  }, []);
 
   const filteredCerts = certifications.filter((cert) =>
     selectedCategory === 'All' ? true : cert.category === selectedCategory
@@ -56,413 +44,243 @@ export const Certifications: React.FC = () => {
   const totalCerts = filteredCerts.length;
   const currentCert = filteredCerts[currentIndex];
 
-  // Reset index when category changes
   const handleCategoryChange = (cat: string) => {
     setSelectedCategory(cat);
     setCurrentIndex(0);
     setDirection('next');
   };
 
-  const goNext = () => {
+  const goNext = useCallback(() => {
     if (currentIndex < totalCerts - 1) {
       setDirection('next');
       setCurrentIndex((i) => i + 1);
     }
-  };
+  }, [currentIndex, totalCerts]);
 
-  const goPrev = () => {
+  const goPrev = useCallback(() => {
     if (currentIndex > 0) {
       setDirection('prev');
       setCurrentIndex((i) => i - 1);
     }
+  }, [currentIndex]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (modalCert) return;
+      if (e.key === 'ArrowRight') goNext();
+      if (e.key === 'ArrowLeft') goPrev();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [goNext, goPrev, modalCert]);
+
+  // Resolves certificate image source (in-memory data URI or public path)
+  const resolveCertImage = (imagePath?: string): string => {
+    if (!imagePath) return '';
+    const fileKey = imagePath.replace('/certificates/', '');
+    return (certificateImages && certificateImages[fileKey]) || imagePath;
   };
 
-  // Page flip variants
-  const reducedVariants = {
-    enter: { opacity: 0, x: direction === 'next' ? 20 : -20 },
-    center: { opacity: 1, x: 0, transition: { duration: 0.25, ease: 'easeOut' as const } },
-    exit: { opacity: 0, x: direction === 'next' ? -20 : 20, transition: { duration: 0.2, ease: 'easeIn' as const } },
-  };
+  const currentImageSrc = currentCert?.image ? resolveCertImage(currentCert.image) : '';
 
-  const flipVariants = {
+  // Ultra-fast transition variants (180ms)
+  const variants = {
     enter: (dir: Direction) => ({
-      rotateY: dir === 'next' ? 80 : -80,
+      x: prefersReduced ? 0 : dir === 'next' ? 40 : -40,
       opacity: 0,
-      transformOrigin: dir === 'next' ? 'left center' : 'right center',
     }),
     center: {
-      rotateY: 0,
+      x: 0,
       opacity: 1,
-      transformOrigin: 'center center',
-      transition: { duration: 0.4, ease: 'easeOut' as const },
+      transition: { duration: prefersReduced ? 0.1 : 0.18, ease: [0.2, 0.8, 0.2, 1] as const },
     },
     exit: (dir: Direction) => ({
-      rotateY: dir === 'next' ? -80 : 80,
+      x: prefersReduced ? 0 : dir === 'next' ? -40 : 40,
       opacity: 0,
-      transformOrigin: dir === 'next' ? 'right center' : 'left center',
-      transition: { duration: 0.3, ease: 'easeIn' as const },
+      transition: { duration: prefersReduced ? 0.08 : 0.15, ease: [0.2, 0.8, 0.2, 1] as const },
     }),
   };
 
-  const pageVariants = prefersReduced ? reducedVariants : flipVariants;
-  const pageTransition = { duration: prefersReduced ? 0.25 : 0.4, ease: 'easeOut' as const };
-
   return (
-    <section id="certifications" className="relative py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-      {/* Section Header */}
-      <div className="flex items-center gap-2 mb-3">
-        <span className="font-mono text-xs text-rose-400 uppercase tracking-widest font-semibold">
-          06 // Professional Credentials
-        </span>
-        <div className="h-[1px] flex-1 max-w-[80px] bg-rose-500/30" />
+    <section id="certifications" className="certs section">
+      <div className="section__head">
+        <span className="tag">07 — Verified Credentials</span>
+        <span className="tag tag--dim">認定資格</span>
       </div>
 
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+      <div className="certs__header flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h2 className="font-display font-bold text-3xl sm:text-4xl text-white tracking-tight">
-            Verified Certifications
+          <h2 className="display certs__title">
+            Verified <em className="serif">Certifications</em>
           </h2>
-          <p className="mt-2 text-sm text-slate-300 max-w-xl font-sans">
-            Formal technical certifications issued by Qualcomm, Anthropic, IBM, Deloitte, Simplilearn, UniAthena, and partner institutions.
+          <p className="about__note max-w-xl mb-0">
+            Formal technical credentials issued by Qualcomm, Anthropic, IBM, Deloitte, Simplilearn, UniAthena, and partner institutions.
           </p>
         </div>
 
         {/* Filter Pills */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1.5 rounded-2xl glass-panel border border-white/15 bg-slate-900/60 text-xs">
-          {categories.map((category) => (
+        <div className="certs__filter-bar">
+          {categories.map((cat) => (
             <button
-              key={category}
-              onClick={() => handleCategoryChange(category)}
-              className={`px-3 py-1.5 rounded-xl transition-all font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 ${
-                selectedCategory === category
-                  ? 'bg-brand-burgundy text-white shadow-sm font-semibold border border-rose-500/40'
-                  : 'text-slate-300 hover:text-white hover:bg-white/5'
-              }`}
+              key={cat}
+              onClick={() => handleCategoryChange(cat)}
+              className={`certs__filter-pill ${selectedCategory === cat ? 'is-active' : ''}`}
             >
-              {category}
-              {category === 'All' ? ` (${certifications.length})` : ''}
+              {cat}
+              {cat === 'All' ? ` (${certifications.length})` : ''}
             </button>
           ))}
         </div>
       </div>
 
-      {/* ── DESKTOP: Book Layout ───────────────────────────── */}
-      <div className="hidden md:block">
-        <div className="book-perspective max-w-4xl mx-auto">
-          {/* Book wrapper — two-page spread */}
-          <div className="relative flex rounded-2xl shadow-2xl shadow-black/60 overflow-hidden min-h-[500px] border border-white/10">
-
-            {/* LEFT COVER / SPINE */}
-            <div className="w-[36%] bg-gradient-to-b from-[#0B0F17] via-[#101726] to-[#0A0E17] flex flex-col items-center justify-between p-8 relative shrink-0 border-r border-white/10">
-              {/* Spine detail */}
-              <div className="absolute top-0 right-0 bottom-0 w-3 bg-gradient-to-r from-black/60 to-transparent pointer-events-none" />
-              <div className="absolute inset-0 bg-tech-grid opacity-10 pointer-events-none" />
-
-              <div className="relative z-10 flex flex-col items-center text-center gap-5 my-auto">
-                {/* Cover emblem */}
-                <div className="w-16 h-16 rounded-2xl bg-rose-950/40 border border-rose-500/40 flex items-center justify-center shadow-lg shadow-black/40">
-                  <BookOpen className="w-8 h-8 text-rose-300" />
-                </div>
-
-                <div>
-                  <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-rose-400 font-semibold mb-1">
-                    Professional Dossier
-                  </div>
-                  <h3 className="font-display font-extrabold text-2xl text-white tracking-tight leading-tight">
-                    AMIT<br />HALDER
-                  </h3>
-                  <div className="mt-2 h-[2px] w-12 bg-rose-500 mx-auto rounded-full shadow-[0_0_8px_rgba(244,63,94,0.5)]" />
-                  <p className="mt-2.5 text-xs font-mono text-slate-300 leading-relaxed font-medium">
-                    Certification Archive
-                  </p>
-                </div>
-
-                {/* Category indicator */}
-                <div className="px-3 py-1.5 rounded-full bg-rose-950/40 border border-rose-500/40 text-[10px] font-mono text-rose-200 font-semibold shadow-sm">
-                  {selectedCategory === 'All' ? 'All Credentials' : selectedCategory}
-                </div>
-
-                {/* Counter */}
-                <div className="text-[11px] font-mono text-slate-300 font-semibold tracking-wider">
-                  {String(currentIndex + 1).padStart(2, '0')} / {String(totalCerts).padStart(2, '0')}
-                </div>
-              </div>
-            </div>
-
-            {/* RIGHT PAGE — Certificate Content */}
-            <div className="flex-1 bg-brand-warm-gray dark:bg-dark-card relative overflow-hidden flex flex-col">
-              {/* Page texture */}
-              <div className="absolute inset-0 bg-tech-grid opacity-20 dark:opacity-10 pointer-events-none" />
-              {/* Page edge shadow */}
-              <div className="absolute top-0 left-0 bottom-0 w-6 bg-gradient-to-r from-black/10 to-transparent pointer-events-none" />
-
-              <AnimatePresence mode="wait" custom={direction}>
-                {currentCert && (
-                  <motion.div
-                    key={`${selectedCategory}-${currentIndex}`}
-                    custom={direction}
-                    variants={pageVariants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={pageTransition}
-                    className="absolute inset-0 flex flex-col justify-between p-7 sm:p-9 book-page"
-                  >
-                    {/* Page header */}
-                    <div>
-                      <div className="flex items-start justify-between mb-4">
-                        <div>
-                          <div className="text-[10px] font-mono uppercase tracking-widest text-brand-charcoal dark:text-slate-400 mb-1">
-                            Certificate of Completion
-                          </div>
-                          <div
-                            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[11px] font-mono font-semibold ${providerBadgeColor(
-                              currentCert.provider
-                            )}`}
-                          >
-                            <Shield className="w-3 h-3" />
-                            {currentCert.provider}
-                          </div>
-                        </div>
-                        <span className="text-[10px] font-mono text-brand-charcoal dark:text-slate-400 px-2.5 py-1 rounded-lg bg-brand-charcoal/8 dark:bg-white/5">
-                          {currentCert.category}
-                        </span>
-                      </div>
-
-                      {/* Certificate title */}
-                      <h3 className="font-display font-bold text-xl sm:text-2xl text-white leading-tight mb-3">
-                        {currentCert.title}
-                      </h3>
-
-                      {/* Credential verified status */}
-                      <div className="flex items-center gap-2 text-xs text-rose-400 font-semibold mb-3">
-                        <CheckCircle2 className="w-4 h-4 text-rose-400 shrink-0" />
-                        <span>Verified Credential · Issued by {currentCert.provider}</span>
-                      </div>
-                    </div>
-
-                    {/* Certificate Preview / Visual Card */}
-                    <div className="my-auto flex flex-col items-center justify-center">
-                      {currentCert.image ? (
-                        <div
-                          onClick={() => setModalCert(currentCert)}
-                          className="group relative cursor-pointer rounded-2xl overflow-hidden border border-[#E7D7BE]/80 shadow-lg hover:shadow-2xl transition-all duration-300 max-h-48 sm:max-h-52 w-full max-w-sm flex items-center justify-center p-3.5 bg-[#FFF8E7]"
-                        >
-                          <img
-                            src={currentCert.image}
-                            alt={`${currentCert.title} certificate`}
-                            loading="lazy"
-                            decoding="async"
-                            className="max-h-40 sm:max-h-44 w-full object-contain rounded-lg shadow-sm group-hover:scale-[1.02] transition-transform duration-300"
-                          />
-                          <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-                            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-brand-burgundy text-white text-xs font-semibold shadow-lg border border-rose-500/30">
-                              <Eye className="w-3.5 h-3.5 text-white" />
-                              <span>View Certificate</span>
-                            </span>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="w-full max-w-sm p-6 rounded-xl border border-dashed border-white/15 bg-white/5 flex flex-col items-center justify-center text-center">
-                          <Shield className="w-8 h-8 text-slate-400 mb-2" />
-                          <span className="text-xs font-mono text-slate-300">
-                            Verified Completion Record
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Prominent View Certificate Button */}
-                      {currentCert.image && (
-                        <button
-                          type="button"
-                          onClick={() => setModalCert(currentCert)}
-                          className="mt-3.5 inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-brand-burgundy hover:bg-rose-700 text-white font-semibold text-xs shadow-md shadow-brand-burgundy/30 hover:scale-[1.02] active:scale-[0.98] transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 border border-rose-500/30"
-                          aria-label={`View full certificate for ${currentCert.title}`}
-                        >
-                          <Eye className="w-3.5 h-3.5 text-white" />
-                          <span>View Full Certificate</span>
-                        </button>
-                      )}
-                    </div>
-
-                    {/* Bottom rule */}
-                    <div className="pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-slate-300">
-                      <span className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">
-                        Amit Halder Portfolio
-                      </span>
-                      <span className="font-semibold text-slate-200">
-                        {String(currentIndex + 1).padStart(2, '0')} / {String(totalCerts).padStart(2, '0')}
-                      </span>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+      {/* Book Dossier Container */}
+      <div className="certs__book">
+        {/* Left Dossier Spine */}
+        <div className="certs__spine">
+          <div>
+            <span className="tag certs__dossier-tag mb-4">Professional Dossier</span>
+            <h3 className="display text-2xl sm:text-3xl text-white mb-2 leading-tight">
+              AMIT HALDER
+            </h3>
+            <p className="font-mono text-xs text-slate-400 mb-6">
+              Verified Technical Archives
+            </p>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-orange-500/40 bg-orange-950/30 text-xs font-mono text-orange-300 font-semibold mb-6">
+              <Award className="w-3.5 h-3.5" />
+              <span>{selectedCategory === 'All' ? 'All Credentials' : selectedCategory}</span>
             </div>
           </div>
 
-          {/* Navigation Controls */}
-          <div className="flex items-center justify-center gap-4 mt-6">
-            <button
-              onClick={goPrev}
-              disabled={currentIndex === 0}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800/80 border border-white/15 text-slate-200 disabled:opacity-30 disabled:cursor-not-allowed hover:border-rose-500/50 hover:bg-slate-800 transition-all text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
-              aria-label="Previous certificate"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              <span>Previous</span>
-            </button>
-
-            {/* Dot indicators */}
-            <div className="flex gap-1.5 flex-wrap justify-center max-w-xs">
-              {filteredCerts.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => {
-                    setDirection(i > currentIndex ? 'next' : 'prev');
-                    setCurrentIndex(i);
-                  }}
-                  className={`transition-all rounded-full focus:outline-none ${
-                    i === currentIndex
-                      ? 'w-6 h-2 bg-rose-500'
-                      : 'w-2 h-2 bg-slate-700 hover:bg-slate-500'
-                  }`}
-                  aria-label={`Go to certificate ${i + 1}`}
-                />
-              ))}
+          <div>
+            <div className="font-mono text-2xl font-bold text-orange-400 mb-1">
+              {String(currentIndex + 1).padStart(2, '0')}
+              <span className="text-sm text-slate-500 font-normal"> / {String(totalCerts).padStart(2, '0')}</span>
             </div>
-
-            <button
-              onClick={goNext}
-              disabled={currentIndex === totalCerts - 1}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800/80 border border-white/15 text-slate-200 disabled:opacity-30 disabled:cursor-not-allowed hover:border-rose-500/50 hover:bg-slate-800 transition-all text-sm font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
-              aria-label="Next certificate"
-            >
-              <span>Next</span>
-              <ChevronRight className="w-4 h-4" />
-            </button>
+            <p className="text-[11px] font-mono text-slate-500">
+              Use arrow buttons or keyboard &larr; &rarr; to navigate instantly.
+            </p>
           </div>
         </div>
-      </div>
 
-      {/* ── MOBILE: Card Viewer ───────────────────────────── */}
-      <div className="md:hidden">
-        <div className="relative">
-          <AnimatePresence mode="wait" custom={direction}>
+        {/* Right Certificate Display */}
+        <div className="certs__page">
+          <AnimatePresence mode="popLayout" custom={direction} initial={false}>
             {currentCert && (
               <motion.div
-                key={`mobile-${selectedCategory}-${currentIndex}`}
+                key={`${selectedCategory}-${currentCert.id}`}
                 custom={direction}
-                variants={{
-                  enter: (dir: Direction) => ({ opacity: 0, x: dir === 'next' ? 40 : -40 }),
-                  center: { opacity: 1, x: 0 },
-                  exit: (dir: Direction) => ({ opacity: 0, x: dir === 'next' ? -40 : 40 }),
-                }}
+                variants={variants}
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-                className="glass-card p-5 rounded-2xl flex flex-col gap-4 border border-white/15 bg-slate-900/70 shadow-sm"
+                className="flex flex-col justify-between h-full"
               >
-                {/* Mobile card header */}
-                <div className="flex items-center justify-between">
-                  <div
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[11px] font-mono font-semibold ${providerBadgeColor(
-                      currentCert.provider
-                    )}`}
-                  >
-                    <Shield className="w-3 h-3" />
-                    {currentCert.provider}
+                <div>
+                  <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+                    <span className="tag text-xs text-orange-400">
+                      <Shield className="w-3.5 h-3.5" />
+                      {currentCert.provider}
+                    </span>
+                    <span className="text-[10px] font-mono px-2.5 py-1 rounded bg-white/5 text-slate-300 border border-white/10">
+                      {currentCert.category}
+                    </span>
                   </div>
-                  <span className="text-[10px] font-mono text-slate-300 font-medium">
-                    {currentCert.category}
-                  </span>
+
+                  <h3 className="display text-xl sm:text-3xl text-white mb-2 leading-snug">
+                    {currentCert.title}
+                  </h3>
+
+                  <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 mb-4 font-semibold">
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>Verified Credential · Issued by {currentCert.provider}</span>
+                  </div>
+
+                  {currentImageSrc ? (
+                    <div
+                      className="certs__preview-box"
+                      onClick={() => setModalCert(currentCert)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => e.key === 'Enter' && setModalCert(currentCert)}
+                      aria-label={`View full certificate for ${currentCert.title}`}
+                    >
+                      <img
+                        src={currentImageSrc}
+                        alt={`${currentCert.title} certificate`}
+                        loading="eager"
+                        decoding="async"
+                        className="certs__preview-img"
+                      />
+                      <div className="certs__preview-overlay">
+                        <span className="tag text-xs text-white bg-black/70 py-2 px-4 rounded-full border border-orange-400">
+                          <Eye className="w-4 h-4 text-orange-400 mr-2" />
+                          Inspect Full Size
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="p-8 rounded-2xl border border-white/10 bg-white/[0.02] text-center my-6">
+                      <Award className="w-8 h-8 text-orange-400 mx-auto mb-2 opacity-60" />
+                      <p className="font-mono text-xs text-slate-400">
+                        Formal verification verified on file by {currentCert.provider}.
+                      </p>
+                    </div>
+                  )}
                 </div>
 
-                <h3 className="font-display font-bold text-lg text-white leading-snug">
-                  {currentCert.title}
-                </h3>
-
-                {/* Certificate image preview if available */}
-                {currentCert.image && (
-                  <div
-                    onClick={() => setModalCert(currentCert)}
-                    className="relative rounded-2xl overflow-hidden border border-[#E7D7BE]/80 bg-[#FFF8E7] p-3.5 cursor-pointer flex items-center justify-center max-h-52 shadow-md"
-                  >
-                    <img
-                      src={currentCert.image}
-                      alt={`${currentCert.title} certificate`}
-                      loading="lazy"
-                      decoding="async"
-                      className="max-h-44 w-full object-contain rounded-lg shadow-sm"
-                    />
-                  </div>
-                )}
-
-                <div className="flex items-center gap-1.5 text-xs text-rose-400 font-semibold">
-                  <CheckCircle2 className="w-4 h-4 text-rose-400" />
-                  <span>Credential Verified · {currentCert.provider}</span>
-                </div>
-
-                {/* View Certificate Button */}
-                {currentCert.image && (
+                {/* Instant Navigation Footer */}
+                <div className="certs__nav-controls">
                   <button
-                    type="button"
-                    onClick={() => setModalCert(currentCert)}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-burgundy hover:bg-rose-700 text-white font-semibold text-xs shadow-md border border-rose-500/30 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
-                    aria-label={`View certificate for ${currentCert.title}`}
+                    onClick={goPrev}
+                    disabled={currentIndex === 0}
+                    className="certs__arrow-btn"
+                    aria-label="Previous certificate"
                   >
-                    <Eye className="w-3.5 h-3.5 text-white" />
-                    <span>View Certificate</span>
+                    <ChevronLeft className="w-4 h-4" />
+                    <span>Previous</span>
                   </button>
-                )}
 
-                <div className="flex items-center justify-between text-xs font-mono text-slate-300 pt-3 border-t border-white/10">
-                  <span>Issuer: {currentCert.provider}</span>
-                  <span className="font-semibold">{String(currentIndex + 1).padStart(2, '0')} / {String(totalCerts).padStart(2, '0')}</span>
+                  {currentImageSrc && (
+                    <button
+                      onClick={() => setModalCert(currentCert)}
+                      className="tag text-xs text-orange-400 hover:text-white transition-colors cursor-pointer"
+                    >
+                      <Eye className="w-3.5 h-3.5 mr-1" />
+                      <span>Full Certificate</span>
+                    </button>
+                  )}
+
+                  <button
+                    onClick={goNext}
+                    disabled={currentIndex === totalCerts - 1}
+                    className="certs__arrow-btn"
+                    aria-label="Next certificate"
+                  >
+                    <span>Next</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
-
-          {/* Mobile nav */}
-          <div className="flex items-center justify-between mt-4 gap-3">
-            <button
-              onClick={goPrev}
-              disabled={currentIndex === 0}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl glass-panel border border-white/15 bg-slate-900/60 text-slate-200 disabled:opacity-30 hover:border-rose-500/40 transition-all text-xs font-semibold"
-              aria-label="Previous certificate"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              Previous
-            </button>
-            <span className="text-xs font-mono text-slate-300 font-semibold tabular-nums whitespace-nowrap">
-              {currentIndex + 1} / {totalCerts}
-            </span>
-            <button
-              onClick={goNext}
-              disabled={currentIndex === totalCerts - 1}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl glass-panel border border-white/15 bg-slate-900/60 text-slate-200 disabled:opacity-30 hover:border-rose-500/40 transition-all text-xs font-semibold"
-              aria-label="Next certificate"
-            >
-              Next
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
         </div>
       </div>
 
-      {/* Certificate Lightbox Modal */}
-      {modalCert && modalCert.image && (
+      {/* Lightbox Modal */}
+      {modalCert && (
         <ImageLightboxModal
-          isOpen={Boolean(modalCert)}
+          isOpen={!!modalCert}
           onClose={() => setModalCert(null)}
           title={modalCert.title}
           category={modalCert.category}
-          badge={`Issued by ${modalCert.provider}`}
-          imageSrc={modalCert.image}
-          altText={`${modalCert.title} Certificate`}
+          badge={modalCert.provider}
+          imageSrc={resolveCertImage(modalCert.image)}
+          altText={`${modalCert.title} certificate`}
         />
       )}
     </section>
   );
 };
+export default Certifications;
+

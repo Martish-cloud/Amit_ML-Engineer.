@@ -81,7 +81,7 @@ export const evolutionStages: EvolutionStage[] = [
     domain: 'Operations Core',
     timeframe: '2020 – 2023',
     description:
-      'Orchestrated Work-in-Progress tracking, material allocation, and multi-stage shop floor scheduling across high-throughput production units.',
+      'Orchestrated Work-in-Progress tracking, material allocation, and multi-stage shop floor scheduling across high-throughput production units at York Print Unit-VI.',
     capabilities: ['WIP Tracking', 'Material Allocation', 'Operational Logging', 'Shopfloor Coordination'],
   },
   {
@@ -90,7 +90,7 @@ export const evolutionStages: EvolutionStage[] = [
     domain: 'Data & Systems Integration',
     timeframe: '2023 – 2025',
     description:
-      'Executed Material Requirements Planning (MRP), dispatch documentation, ERP data accuracy, and quality executive governance.',
+      'Executed Material Requirements Planning (MRP), dispatch documentation, ERP data accuracy, and quality governance across York Print Unit-IV and Jay Boxes.',
     capabilities: ['ERP Administration', 'MRP Scheduling', 'Dispatch Logistics', 'Quality Governance'],
   },
   {
@@ -99,7 +99,7 @@ export const evolutionStages: EvolutionStage[] = [
     domain: 'Operational Optimization & R&D',
     timeframe: '2025',
     description:
-      'Led R&D initiatives implementing ERP inventory tracking, conducting operational data analysis, and streamlining production workflows.',
+      'Led R&D initiatives implementing ERP inventory tracking, conducting operational data analysis, and streamlining production workflows at Pioneer Mega Printers.',
     capabilities: ['Workflow Optimization', 'Inventory Analytics', 'R&D Exploration', 'Data Modeling'],
   },
   {
@@ -481,3 +481,101 @@ export const languages: LanguageItem[] = [
     nativeName: '日本語',
   },
 ];
+
+export interface Project {
+  repo: string;
+  title: string;
+  kanji: string;
+  blurb: string;
+  stack: string[];
+  accent: string;
+  shotKey: string;
+  live?: string;
+  github?: string;
+  client?: string;
+}
+
+export const projects: Project[] = [
+  {
+    repo: 'intuit-genai-workflows',
+    title: 'Intuit · GenAI Workflow Engine',
+    kanji: '生成知能',
+    blurb: 'Engineered few-shot and zero-shot prompt architectures, integrated mission-critical APIs, and built enterprise-compliant LLM workflows for production applications.',
+    stack: ['GenAI', 'Prompt Engineering', 'API Integration', 'LLMs', 'Compliance'],
+    accent: '#ff7a1a',
+    shotKey: 'madaramusic.webp',
+    client: 'Intuit Enterprise',
+    github: 'https://github.com/Martish-cloud',
+    live: 'https://www.linkedin.com/in/amit-halder-/'
+  },
+  {
+    repo: 'mphasis-llm-chatbots',
+    title: 'Mphasis · Enterprise LLM Chatbots',
+    kanji: '対話型AI',
+    blurb: 'Architected conversational chatbot pipelines powered by foundation LLMs. Enhanced NLP response accuracy through systematic prompt tuning and benchmark evaluation.',
+    stack: ['LLMs', 'Chatbot Workflows', 'NLP Optimization', 'Prompt Tuning'],
+    accent: '#e2383f',
+    shotKey: 'itachi.webp',
+    client: 'Mphasis AI Group',
+    github: 'https://github.com/Martish-cloud',
+    live: 'https://www.linkedin.com/in/amit-halder-/'
+  },
+  {
+    repo: 'n8n-ai-automation-pipeline',
+    title: 'Autonomous n8n AI Pipeline',
+    kanji: '自動化術',
+    blurb: 'Scalable low-code/no-code AI workflow automation system connecting foundation model endpoints with operational databases and notification channels.',
+    stack: ['n8n', 'AI Automation', 'REST APIs', 'System Connectors', 'Python'],
+    accent: '#c77dff',
+    shotKey: 'Demon-Slayer-Yorichi-Kokoshibo-.webp',
+    github: 'https://github.com/Martish-cloud',
+    live: 'https://amit-mlengineer.zynova.co.in/'
+  },
+  {
+    repo: 'pioneer-industrial-erp',
+    title: 'Industrial ERP & WIP Intelligence',
+    kanji: '工程管理',
+    blurb: 'Implemented full plant-wide ERP inventory tracking, eliminated production bottlenecks with operational data modeling, and accelerated shift-level throughput.',
+    stack: ['ERP Systems', 'WIP Tracking', 'Operations Analysis', 'MRP', 'R&D'],
+    accent: '#facc15',
+    shotKey: 'Naruto-SageMode.webp',
+    client: 'Pioneer Mega Printers',
+    github: 'https://github.com/Martish-cloud'
+  },
+  {
+    repo: 'predictive-ml-nlp-engine',
+    title: 'Predictive ML & NLP Analytics',
+    kanji: '機械学習',
+    blurb: 'Statistical machine learning pipelines and text processing architectures transforming unstructured records and logs into actionable automated intelligence.',
+    stack: ['Python', 'Supervised ML', 'NLP', 'Data Science', 'Feature Engineering'],
+    accent: '#38bdf8',
+    shotKey: 'Gojo.webp',
+    github: 'https://github.com/Martish-cloud',
+    live: 'https://github.com/Martish-cloud'
+  },
+  {
+    repo: 'powerbi-sql-executive-dashboards',
+    title: 'Power BI & SQL BI Command Center',
+    kanji: '統計知見',
+    blurb: 'Complex SQL data extraction pipelines and interactive Power BI dashboards providing real-time visibility into operational performance metrics and executive KPIs.',
+    stack: ['Power BI', 'SQL', 'Excel Modeling', 'KPI Dashboards', 'Analytics'],
+    accent: '#10b981',
+    shotKey: 'Minato.webp',
+    github: 'https://github.com/Martish-cloud',
+    live: 'https://amit-mlengineer.zynova.co.in/'
+  }
+];
+
+export const profileStats = {
+  genaiYears: 2,
+  opsYears: 6,
+  certs: 16,
+  roles: 6
+};
+
+export const socials = [
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/amit-halder-/' },
+  { label: 'GitHub', href: 'https://github.com/Martish-cloud' },
+  { label: 'Email', href: 'mailto:askfor.amithalder@gmail.com' }
+];
+

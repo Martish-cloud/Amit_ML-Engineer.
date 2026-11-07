@@ -71,3 +71,4 @@ export interface EvolutionStage {
   timeframe: string;
   capabilities: string[];
 }
+

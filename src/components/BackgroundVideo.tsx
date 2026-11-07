@@ -43,3 +43,4 @@ export const BackgroundVideo: React.FC = () => {
     </div>
   );
 };
+

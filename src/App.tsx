@@ -1,65 +1,102 @@
-import { useState } from 'react';
-import { Loader } from './components/Loader';
-import { BackgroundVideo } from './components/BackgroundVideo';
-import { ScrollProgress } from './components/ScrollProgress';
-import { BackgroundGrid } from './components/BackgroundGrid';
-import { CustomCursor } from './components/CustomCursor';
-import { Navbar } from './components/Navbar';
-import { Hero } from './sections/Hero';
-import { About } from './sections/About';
-import { CareerEvolution } from './sections/CareerEvolution';
-import { Experience } from './sections/Experience';
-import { Skills } from './sections/Skills';
-import { TechOrbit } from './sections/TechOrbit';
-import { Education } from './sections/Education';
-import { Certifications } from './sections/Certifications';
-import { PersonalDocuments } from './sections/PersonalDocuments';
-import { Inquiry } from './sections/Inquiry';
-import { Contact } from './sections/Contact';
-import { Footer } from './components/Footer';
+import { useCallback, useEffect, useRef } from 'react';
+import Lenis from 'lenis';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import ClickSpark from './bits/ClickSpark';
+import ScrollVelocity from './bits/ScrollVelocity';
+import Navbar from './components/Navbar';
+import Intro from './sections/Intro';
+import About from './sections/About';
+import CareerEvolution from './sections/CareerEvolution';
+import Projects from './sections/Projects';
+import Skills from './sections/Skills';
+import TechOrbit from './sections/TechOrbit';
+import Experience from './sections/Experience';
+import Education from './sections/Education';
+import Certifications from './sections/Certifications';
+import Inquiry from './sections/Inquiry';
+import Contact from './sections/Contact';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export function App() {
-  const [loading, setLoading] = useState(true);
+  const lenis = useRef<Lenis | null>(null);
+
+  useEffect(() => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.documentElement.classList.add('is-loading');
+    if (reduce) {
+      document.documentElement.classList.remove('is-loading');
+      return;
+    }
+    const l = new Lenis({ lerp: 0.09, wheelMultiplier: 0.9 });
+    l.stop();
+    lenis.current = l;
+    l.on('scroll', ScrollTrigger.update);
+    const tick = (t: number) => l.raf(t * 1000);
+    gsap.ticker.add(tick);
+    gsap.ticker.lagSmoothing(0);
+    return () => {
+      gsap.ticker.remove(tick);
+      l.destroy();
+    };
+  }, []);
+
+  const onReady = useCallback(() => {
+    document.documentElement.classList.remove('is-loading');
+    lenis.current?.start();
+    ScrollTrigger.refresh();
+    document.fonts?.ready.then(() => ScrollTrigger.refresh());
+  }, []);
+
+  // Smooth in-page anchor jumps through Lenis
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const a = (e.target as HTMLElement).closest('a[href^="#"]');
+      if (!a) return;
+      const href = a.getAttribute('href');
+      if (!href || href === '#') return;
+      if (lenis.current) {
+        e.preventDefault();
+        lenis.current.scrollTo(href, { duration: 1.4 });
+      }
+    };
+    document.addEventListener('click', onClick);
+    return () => document.removeEventListener('click', onClick);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-dark-bg text-brand-warm-gray selection:bg-brand-burgundy/20 selection:text-brand-burgundy relative font-sans transition-colors duration-300">
-      {/* Short sleek entrance loader */}
-      {loading && <Loader onComplete={() => setLoading(false)} />}
-
-      {/* Global Fixed Background Video Layer (Fixed to viewport, clean & non-blocking) */}
-      <BackgroundVideo />
-
-      {/* Ambient Reading Progress Bar */}
-      <ScrollProgress />
-
-      {/* Desktop Interactive Custom Cursor */}
-      <CustomCursor />
-
-      {/* Non-blocking Ambient Background Mesh */}
-      <BackgroundGrid />
-
-      {/* Floating Glass Navigation */}
+    <ClickSpark sparkColor={['#ff7a1a', '#ffd7a8', '#e2383f']} sparkCount={10} sparkRadius={26} sparkSize={12} shape="star">
+      <div className="grain" aria-hidden="true" />
       <Navbar />
 
-      {/* Main Content Area */}
-      <main className="relative z-10">
-        <Hero isLoaded={!loading} />
+      <main>
+        <Intro onReady={onReady} />
+        <div className="ribbon">
+          <ScrollVelocity
+            texts={[
+              'Amit Halder ✦ GenAI Developer ✦ Machine Learning Engineer ✦ Production AI Systems ✦ ',
+              'Prompt Architecture ✦ LLM Workflows ✦ n8n Automation ✦ Industrial Operations ✦ '
+            ]}
+            velocity={70}
+            className="marquee-text"
+            outlineAlternate
+            numCopies={6}
+          />
+        </div>
         <About />
         <CareerEvolution />
-        <Experience />
+        <Projects />
         <Skills />
         <TechOrbit />
+        <Experience />
         <Education />
         <Certifications />
-        <PersonalDocuments />
         <Inquiry />
         <Contact />
       </main>
-
-      {/* Technical Minimal Footer */}
-      <Footer />
-    </div>
+    </ClickSpark>
   );
 }
-
 export default App;
+
