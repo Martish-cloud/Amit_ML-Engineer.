@@ -9,7 +9,7 @@ import type {
 } from '../types';
 
 export const personalInfo = {
-  name: 'Amit Halder',
+  name: 'Mr. Amit Haldar',
   initials: 'AH',
   headline: 'GenAI Developer / Machine Learning Engineer',
   tagline: 'Bridging AI systems with real-world business operations.',
@@ -77,7 +77,7 @@ export const careerPillars: CareerPillar[] = [
 export const evolutionStages: EvolutionStage[] = [
   {
     step: '01',
-    title: 'Industrial Production & WIP Management',
+    title: 'Industrial Project and WIP Management',
     domain: 'Operations Core',
     timeframe: '2020 – 2023',
     description:
@@ -86,7 +86,7 @@ export const evolutionStages: EvolutionStage[] = [
   },
   {
     step: '02',
-    title: 'ERP Systems, MRP & Logistics Control',
+    title: 'ERP System, MRP and Logistic Control',
     domain: 'Data & Systems Integration',
     timeframe: '2023 – 2025',
     description:
@@ -95,7 +95,7 @@ export const evolutionStages: EvolutionStage[] = [
   },
   {
     step: '03',
-    title: 'Workflow Automation & Operational Analytics',
+    title: 'Workflow Automation and Operational Analytics',
     domain: 'Operational Optimization & R&D',
     timeframe: '2025',
     description:
@@ -295,6 +295,8 @@ export const techOrbit = [
   { name: 'Machine Learning', category: 'AI', level: 'Core' },
   { name: 'NLP', category: 'AI', level: 'Core' },
   { name: 'Fine-tuning', category: 'AI', level: 'Advanced' },
+  { name: 'Hugging Face', category: 'AI', level: 'Core' },
+  { name: 'LangChain', category: 'AI', level: 'Core' },
   { name: 'API Integration', category: 'Eng', level: 'Core' },
   { name: 'n8n Automation', category: 'Automation', level: 'Core' },
   { name: 'GANs', category: 'AI', level: 'Specialized' },

@@ -141,7 +141,7 @@ export const Certifications: React.FC = () => {
           <div>
             <span className="tag certs__dossier-tag mb-4">Professional Dossier</span>
             <h3 className="display text-2xl sm:text-3xl text-white mb-2 leading-tight">
-              AMIT HALDER
+              MR. AMIT HALDAR
             </h3>
             <p className="font-mono text-xs text-slate-400 mb-6">
               Verified Technical Archives

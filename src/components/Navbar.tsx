@@ -30,7 +30,7 @@ export const Navbar: React.FC = () => {
       <header className={`nav ${scrolled ? 'nav--scrolled' : ''}`}>
         <a href="#home" className="nav__logo">
           <span className="nav__mark">AH</span>
-          <span>{personalInfo.name.toLowerCase().replace(' ', '')}.ai</span>
+          <span>{personalInfo.name}</span>
         </a>
 
         <nav>

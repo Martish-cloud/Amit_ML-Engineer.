@@ -116,7 +116,7 @@ export default function Projects() {
 
         <div className="panel panel--outro">
           <a href="https://github.com/Martish-cloud" target="_blank" rel="noreferrer" className="outro-link">
-            <span className="tag">GitHub Profile · Amit Halder</span>
+            <span className="tag">GitHub Profile · Mr. Amit Haldar</span>
             <span className="display">
               View all<br />repositories ↗
             </span>

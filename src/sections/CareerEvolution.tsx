@@ -20,12 +20,12 @@ export function CareerEvolution() {
   useGSAP(
     () => {
       gsap.from('.traj__card', {
-        y: 60,
-        opacity: 0,
-        stagger: 0.12,
-        duration: 0.9,
+        y: 40,
+        opacity: 0.35,
+        stagger: 0.1,
+        duration: 0.8,
         ease: 'power3.out',
-        scrollTrigger: { trigger: root.current, start: 'top 80%' }
+        scrollTrigger: { trigger: root.current, start: 'top 85%' }
       });
     },
     { scope: root }
@@ -38,11 +38,11 @@ export function CareerEvolution() {
         <span className="tag tag--dim">進化の道</span>
       </div>
 
-      <div className="mb-12">
-        <h2 className="display text-4xl sm:text-6xl max-w-4xl mb-4">
-          The Operational Foundation <em className="serif">meets Frontier AI</em>
+      <div className="mb-8">
+        <h2 className="display text-4xl sm:text-6xl max-w-4xl mb-3">
+          Foundation <em className="serif">Meets Frontier AI</em>
         </h2>
-        <p className="about__note max-w-3xl">
+        <p className="about__note max-w-3xl mb-0">
           How 6+ years of shopfloor discipline, ERP data accuracy, and material requirements planning
           evolved into engineering resilient enterprise Generative AI and Machine Learning systems.
         </p>
@@ -52,27 +52,27 @@ export function CareerEvolution() {
         {evolutionStages.map((stage, idx) => (
           <article key={stage.step} className="traj__card">
             <div>
-              <div className="flex items-center justify-between mb-6">
-                <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+              <div className="flex items-center justify-between mb-5">
+                <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center shadow-sm">
                   {renderStageIcon(idx)}
                 </div>
                 <span className="traj__step">{stage.step}</span>
               </div>
 
-              <span className="tag text-[10px] text-orange-400 mb-2">
+              <span className="tag text-[10px] text-orange-300 bg-orange-950/40 border border-orange-500/30 px-2.5 py-0.5 rounded-full mb-3 inline-block font-mono">
                 {stage.timeframe} · {stage.domain}
               </span>
-              <h3 className="font-display font-bold text-lg text-white mb-3">
+              <h3 className="font-display font-bold text-lg sm:text-xl text-white mb-2 leading-snug">
                 {stage.title}
               </h3>
-              <p className="text-sm text-slate-300 leading-relaxed mb-6 font-sans">
+              <p className="text-sm text-slate-200 leading-relaxed mb-6 font-sans">
                 {stage.description}
               </p>
             </div>
 
             <ul className="chips">
               {stage.capabilities.map((cap) => (
-                <li key={cap}>{cap}</li>
+                <li key={cap} className="text-slate-100 bg-white/8 border border-white/12">{cap}</li>
               ))}
             </ul>
           </article>

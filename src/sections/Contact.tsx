@@ -106,12 +106,12 @@ export default function Contact() {
           </ul>
         </div>
 
-        <img className="contact__art" src={companionSrc} alt="Amit Halder 3D companion illustration" loading="lazy" />
+        <img className="contact__art" src={companionSrc} alt="Mr. Amit Haldar 3D companion illustration" loading="lazy" />
       </div>
 
       <footer className="footer">
         <img src={runnerSrc} alt="" className="footer__runner" />
-        <span>&copy; {new Date().getFullYear()} Amit Halder</span>
+        <span>&copy; {new Date().getFullYear()} Mr. Amit Haldar</span>
         <span className="serif">Dattebayo — keep engineering, keep growing.</span>
         <a href="#home" className="link-u">Back to top &uarr;</a>
       </footer>

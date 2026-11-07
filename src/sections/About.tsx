@@ -31,7 +31,7 @@ function CodeLoop() {
       io.disconnect();
     };
   }, []);
-  return <canvas ref={ref} className="about__canvas" aria-label="Amit Halder coding models and workflows on laptop" />;
+  return <canvas ref={ref} className="about__canvas" aria-label="Mr. Amit Haldar coding models and workflows on laptop" />;
 }
 
 export default function About() {
@@ -135,7 +135,7 @@ export default function About() {
             </div>
           </dl>
 
-          <div className="flex items-center gap-4 mt-8 flex-wrap">
+          <div className="flex items-center gap-4 mt-6 flex-wrap">
             <a
               href={personalInfo.resumeUrl}
               download="Amit_Halder_Resume.pdf"

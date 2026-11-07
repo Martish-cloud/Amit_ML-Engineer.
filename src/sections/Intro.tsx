@@ -76,7 +76,7 @@ export default function Intro({ onReady }: { onReady: () => void }) {
   return (
     <section ref={root} className="intro" id="home">
       <div className="intro__stage">
-        <canvas ref={canvas} className="intro__canvas" aria-label="Animated 3D portrait of Amit Halder lifting his hat" />
+        <canvas ref={canvas} className="intro__canvas" aria-label="Animated 3D portrait of Mr. Amit Haldar lifting his hat" />
       </div>
       <div className="intro__veil" />
       <div className="intro__particles">
@@ -106,9 +106,9 @@ export default function Intro({ onReady }: { onReady: () => void }) {
         </div>
       </div>
 
-      <h1 className="intro__name" aria-label="Amit Halder">
-        <span>Amit</span>
-        <span>Halder</span>
+      <h1 className="intro__name" aria-label="Mr. Amit Haldar">
+        <span>Mr. Amit</span>
+        <span>Haldar</span>
       </h1>
 
       <div className="intro__sub">

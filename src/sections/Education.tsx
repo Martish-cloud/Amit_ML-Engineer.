@@ -9,17 +9,17 @@ export function Education() {
         <span className="tag tag--dim">学問と言語</span>
       </div>
 
-      <div className="mb-12">
-        <h2 className="display text-3xl sm:text-5xl text-white mb-4">
+      <div className="mb-8">
+        <h2 className="display text-3xl sm:text-5xl text-white mb-3">
           Academic Foundations <em className="serif">&amp; Languages</em>
         </h2>
-        <p className="about__note max-w-2xl">
+        <p className="about__note max-w-2xl mb-0">
           Formal university education, specialized linguistic curriculum, and multilingual capabilities
           spanning 6 regional and international languages.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Education column */}
         <div className="lg:col-span-7 flex flex-col gap-4">
           <div className="flex items-center gap-2 mb-2 text-xs font-mono text-orange-400 uppercase tracking-wider">

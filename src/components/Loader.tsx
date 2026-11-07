@@ -50,7 +50,7 @@ export const Loader: React.FC<LoaderProps> = ({ onComplete }) => {
             >
               <img
                 src="/profile.jpeg"
-                alt="Amit Halder"
+                alt="Mr. Amit Haldar"
                 className="w-full h-full object-cover rounded-xl"
               />
             </motion.div>

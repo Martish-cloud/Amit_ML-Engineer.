@@ -75,7 +75,7 @@ export function App() {
         <div className="ribbon">
           <ScrollVelocity
             texts={[
-              'Amit Halder ✦ GenAI Developer ✦ Machine Learning Engineer ✦ Production AI Systems ✦ ',
+              'Mr. Amit Haldar ✦ GenAI Developer ✦ Machine Learning Engineer ✦ Production AI Systems ✦ ',
               'Prompt Architecture ✦ LLM Workflows ✦ n8n Automation ✦ Industrial Operations ✦ '
             ]}
             velocity={70}

@@ -122,7 +122,7 @@ ${form.message.trim()}
 
 --------------------------------
 Submitted via:
-Amit Halder Portfolio
+Mr. Amit Haldar Portfolio
 --------------------------------
 `.trim();
 

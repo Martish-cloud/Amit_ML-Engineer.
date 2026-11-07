@@ -56,9 +56,9 @@ export default function Experience() {
         <span className="tag tag--dim">経歴</span>
       </div>
 
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
         <div>
-          <h2 className="display exp__title mb-4">
+          <h2 className="display exp__title mb-3">
             The path <em className="serif">so far</em>
           </h2>
           <p className="about__note max-w-xl mb-0">
@@ -92,7 +92,7 @@ export default function Experience() {
 
       <div className="exp__grid">
         <figure className="exp__portrait">
-          <img src={portraitSrc} alt="Amit Halder workstation illustration" loading="lazy" />
+          <img src={portraitSrc} alt="Mr. Amit Haldar workstation illustration" loading="lazy" />
         </figure>
 
         <div>

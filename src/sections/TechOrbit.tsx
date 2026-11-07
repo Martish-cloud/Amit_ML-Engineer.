@@ -26,20 +26,20 @@ export function TechOrbit() {
   };
 
   return (
-    <section className="section" id="matrix" style={{ paddingTop: '40px' }}>
+    <section className="section" id="matrix">
       <div className="section__head">
-        <span className="tag">Matrix</span>
+        <span className="tag">04 — Core Competencies</span>
         <span className="tag tag--dim">基盤能力</span>
       </div>
 
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
         <div>
           <div className="inline-flex items-center gap-2 text-xs font-mono text-orange-400 uppercase tracking-wider mb-2">
             <Terminal className="w-3.5 h-3.5" />
             <span>Interactive Node Matrix</span>
           </div>
           <h3 className="display text-3xl sm:text-5xl text-white">
-            Core Competency <em className="serif">Grid</em>
+            Core Competency <em className="serif">Guide</em>
           </h3>
         </div>
         <p className="text-xs font-mono text-slate-400 max-w-md">
