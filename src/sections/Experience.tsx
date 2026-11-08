@@ -3,7 +3,7 @@ import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import SpotlightCard from '../bits/SpotlightCard';
 import { experiences } from '../data/profile';
-import boyPortrait from '../Images/Image 1.png';
+import animePortrait from '../Images/Anime 1.png';
 
 const sideQuests = [
   { name: 'LLM Prompt Engineering Suite', lang: 'Python', role: 'Prompt Architecture', stars: 'Core' },
@@ -91,7 +91,7 @@ export default function Experience() {
       <div className="exp__grid">
         <figure className="exp__portrait">
           <img
-            src={boyPortrait}
+            src={animePortrait}
             alt="Mr. Amit Haldar"
             className="w-full h-full object-cover object-center"
             loading="lazy"
