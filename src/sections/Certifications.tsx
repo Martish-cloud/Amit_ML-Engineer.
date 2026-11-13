@@ -146,8 +146,8 @@ export const Certifications: React.FC = () => {
             <p className="font-mono text-xs text-slate-400 mb-6">
               Verified Technical Archives
             </p>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-orange-500/40 bg-orange-950/30 text-xs font-mono text-orange-300 font-semibold mb-6">
-              <Award className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-orange-500/40 bg-orange-950/30 text-xs font-mono text-orange-300 font-semibold mb-6 max-w-full">
+              <Award className="w-3.5 h-3.5 shrink-0" />
               <span>{selectedCategory === 'All' ? 'All Credentials' : selectedCategory}</span>
             </div>
           </div>
@@ -174,7 +174,7 @@ export const Certifications: React.FC = () => {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                className="flex flex-col justify-between h-full"
+                className="flex flex-col justify-between h-full min-w-0 w-full"
               >
                 <div>
                   <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
@@ -187,7 +187,7 @@ export const Certifications: React.FC = () => {
                     </span>
                   </div>
 
-                  <h3 className="display text-xl sm:text-3xl text-white mb-2 leading-snug">
+                  <h3 className="display text-xl sm:text-3xl text-white mb-2 leading-snug break-words">
                     {currentCert.title}
                   </h3>
 
@@ -237,16 +237,17 @@ export const Certifications: React.FC = () => {
                     className="certs__arrow-btn"
                     aria-label="Previous certificate"
                   >
-                    <ChevronLeft className="w-4 h-4" />
+                    <ChevronLeft className="w-4 h-4 shrink-0" />
                     <span>Previous</span>
                   </button>
 
                   {currentImageSrc && (
                     <button
                       onClick={() => setModalCert(currentCert)}
-                      className="tag text-xs text-orange-400 hover:text-white transition-colors cursor-pointer"
+                      className="certs__full-btn tag text-xs text-orange-400 hover:text-white transition-colors cursor-pointer"
+                      aria-label="View full certificate"
                     >
-                      <Eye className="w-3.5 h-3.5 mr-1" />
+                      <Eye className="w-3.5 h-3.5 mr-1 shrink-0" />
                       <span>Full Certificate</span>
                     </button>
                   )}
@@ -258,7 +259,7 @@ export const Certifications: React.FC = () => {
                     aria-label="Next certificate"
                   >
                     <span>Next</span>
-                    <ChevronRight className="w-4 h-4" />
+                    <ChevronRight className="w-4 h-4 shrink-0" />
                   </button>
                 </div>
               </motion.div>

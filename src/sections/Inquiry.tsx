@@ -168,32 +168,32 @@ Mr. Amit Haldar Portfolio
       <div className="inquiry__grid">
         {/* Left Side: Pitch & Information */}
         <div>
-          <h2 className="display text-4xl sm:text-6xl text-white mb-6">
+          <h2 className="display text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-white mb-3 sm:mb-6 leading-tight">
             Let's build something <em className="serif">intelligent together.</em>
           </h2>
-          <p className="about__note leading-relaxed mb-8">
+          <p className="about__note leading-relaxed mb-4 sm:mb-8 text-sm sm:text-base">
             I partner with founders, enterprise teams, and innovative organizations to build production
             Generative AI applications, fine-tune models, engineer prompt architectures, and automate
             complex data workflows.
           </p>
 
-          <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] mb-8">
-            <h4 className="font-display font-bold text-sm text-white uppercase tracking-wider mb-3">
+          <div className="p-4 sm:p-6 rounded-2xl border border-white/10 bg-white/[0.02] mb-4 sm:mb-8">
+            <h4 className="font-display font-bold text-xs sm:text-sm text-white uppercase tracking-wider mb-2.5 sm:mb-3">
               Direct Contact Channels
             </h4>
             <div className="flex flex-col gap-2 font-mono text-xs text-slate-300">
-              <div>Email: <a href={`mailto:${personalInfo.email}`} className="text-orange-400 hover:underline">{personalInfo.email}</a></div>
+              <div>Email: <a href={`mailto:${personalInfo.email}`} className="text-orange-400 hover:underline break-all">{personalInfo.email}</a></div>
               <div>Phone: <a href={`tel:${personalInfo.phoneRaw}`} className="text-orange-400 hover:underline">{personalInfo.phone}</a></div>
               <div>Location: <span className="text-slate-400">{personalInfo.location}</span></div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 mb-6 lg:mb-0">
             <a
               href={personalInfo.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="tag py-3 px-6 rounded-full border border-white/20 hover:border-orange-400 text-xs transition-colors"
+              className="tag py-2.5 sm:py-3 px-5 sm:px-6 rounded-full border border-white/20 hover:border-orange-400 text-xs transition-colors"
             >
               <span>Connect on LinkedIn</span>
               <ExternalLink className="w-3.5 h-3.5 text-orange-400" />
@@ -202,7 +202,7 @@ Mr. Amit Haldar Portfolio
         </div>
 
         {/* Right Side: Form */}
-        <div className="p-8 sm:p-10 rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-md">
+        <div className="inquiry__form-card p-5 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl border border-white/10 bg-white/[0.02] backdrop-blur-md w-full min-w-0">
           {formState === 'success' ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -226,7 +226,7 @@ Mr. Amit Haldar Portfolio
               </button>
             </motion.div>
           ) : (
-            <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
+            <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4 sm:gap-5 w-full">
               {/* Honeypot field for bot protection */}
               <input
                 type="text"
@@ -238,7 +238,7 @@ Mr. Amit Haldar Portfolio
                 autoComplete="off"
               />
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                 <div>
                   <label htmlFor="name" className="inquiry__label">
                     Full Name *
@@ -383,11 +383,11 @@ Mr. Amit Haldar Portfolio
                 {formState === 'loading' ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                    <span>Transmitting Inquiry…</span>
+                    <span className="whitespace-nowrap">Transmitting Inquiry…</span>
                   </>
                 ) : (
                   <>
-                    <span>Submit Project Inquiry</span>
+                    <span className="whitespace-nowrap">Submit Project Inquiry</span>
                     <Send className="w-4 h-4" />
                   </>
                 )}

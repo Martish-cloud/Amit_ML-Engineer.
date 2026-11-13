@@ -56,13 +56,13 @@ export function TechOrbit() {
               onClick={() => setActiveTech(isSelected ? null : tech.name)}
               className={`matrix__card text-left ${isSelected ? 'is-active' : ''}`}
             >
-              <div className="flex items-center justify-between mb-3">
-                <span className={`text-[10px] font-mono uppercase px-2 py-0.5 rounded border ${getTagColor(tech.category)}`}>
+              <div className="flex items-center justify-between mb-2 gap-1">
+                <span className={`text-[9px] sm:text-[10px] font-mono uppercase px-1.5 sm:px-2 py-0.5 rounded border leading-none shrink-0 ${getTagColor(tech.category)}`}>
                   {tech.category}
                 </span>
-                <span className="text-[10px] font-mono text-slate-400">{tech.level}</span>
+                <span className="text-[9px] sm:text-[10px] font-mono text-slate-400 shrink-0">{tech.level}</span>
               </div>
-              <div className="font-display font-semibold text-base text-white">{tech.name}</div>
+              <div className="font-display font-semibold text-xs sm:text-sm md:text-base text-white leading-snug break-words">{tech.name}</div>
             </button>
           );
         })}
